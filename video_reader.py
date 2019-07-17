@@ -39,7 +39,7 @@ class Video_Reader(object):
 
 
         if (resolution is None):
-            resolution = [self.metadata["width"], self.metadata["height"], 3]
+            resolution = [self.metadata["height"], self.metadata["width"], 3]
 
         self.resolution = resolution
 
