@@ -53,8 +53,8 @@ def compute_fft(i,data_subset):
 
     frequencies = np.fft.fftfreq(for_fft_data.shape[2], d = 1/fps) [ 10:60 ]
 
-    maxf = frequencies[np.argmax(np.abs(freq_space[:,:,10:60].real) + np.abs(freq_space[:,:,-10:-60:-1].real),axis=2)]
-    f_ampl = np.max(np.abs(freq_space[:,:,10:60].real) + np.abs(freq_space[:,:,-10:-60:-1].real),axis=2)
+    maxf = frequencies[np.argmax(np.abs(freq_space[:,:,10:60]) + np.abs(freq_space[:,:,-10:-60:-1]),axis=2)]
+    f_ampl = np.max(np.abs(freq_space[:,:,10:60]) + np.abs(freq_space[:,:,-10:-60:-1]),axis=2)
 
     return maxf, f_ampl
 

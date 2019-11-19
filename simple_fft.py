@@ -62,16 +62,11 @@ bottom = np.where(freq>0.1)[0][0]
 top = np.where(freq>3)[0][0]
 
 print("finding strongest frequency")
-fmx = np.argmax(np.abs(f[:,:,bottom:top].real),axis=2)
-ampl = np.max(np.abs(f[:,:,bottom:top].real),axis=2)
+fmx = np.argmax(np.abs(f[:,:,bottom:top]),axis=2)
+ampl = np.max(np.abs(f[:,:,bottom:top]),axis=2)
 
 bf = freq[bottom:top][fmx]
 
-# print("finding strongest frequency")
-# fmx = np.argmax(np.abs(f[5:100].real),axis=0)
-# ampl = np.max(np.abs(f[5:100].real),axis=0)
-#
-# bf = freq[5:100][fmx]
 # bf = signal.medfilt2d(bf)
 
 # clf();imshow(bf,origin="upper",cmap=cm.jet);colorbar();clim(0.5,1.2)
