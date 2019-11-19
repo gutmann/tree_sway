@@ -1,5 +1,3 @@
-
-
  #!/usr/bin/env python
 from __future__ import print_function
 import numpy as np
@@ -78,7 +76,8 @@ def find_match(frame_1, frame_2, loc_1, reg_nx=20, reg_ny=20, search_window=5):
 
 def vid2nc(filename="/Users/gutmann/Desktop/IMG_2303.m4v",resolution=(1920,1080,3),n=-1, outputfile="movie_data.nc"):
     """docstring for vid2nc"""
-    import mygis
+    # import mygis
+    # import xarray as xr
     import video_reader as vr
     vid=vr.Video_Reader(filename,resolution)
 
@@ -95,7 +94,8 @@ def vid2nc(filename="/Users/gutmann/Desktop/IMG_2303.m4v",resolution=(1920,1080,
             i += 1
 
     outputdata = np.concatenate(outputdata,axis=0)
-    mygis.write(outputfile,outputdata)
+    # xr.DataArray(outputdata).to_netcdf(outputfile)
+    # mygis.write(outputfile,outputdata)
 
 def main(filename="/Users/gutmann/Desktop/IMG_2303.m4v",
          resolution=(1080,1920,3),  # resolution=(2160, 3840, 3)

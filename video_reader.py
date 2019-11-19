@@ -18,6 +18,7 @@ class Video_Reader(object):
     resolution = None
     filename = ""
     metadata = None
+    shape = ()
 
     def __init__(self, filename, resolution=None):
         super(Video_Reader, self).__init__()
@@ -42,14 +43,40 @@ class Video_Reader(object):
             resolution = [self.metadata["height"], self.metadata["width"], 3]
 
         self.resolution = resolution
+        self.shape = (int(self.metadata["nb_frames"]), self.metadata["height"], self.metadata["width"], 3)
 
         self.npixels = resolution[0]*resolution[1]*resolution[2]
 
     def get_metadata(self):
         if self.metadata is None:
             self.read_metadata()
+            try:
+                # iphone movies taken vertically just add metadata tags to specify the rotation
+                # rather than actually changing the width and height metadata, but the raw data
+                # are rotated so when read in you have to swap width and height
+                angle = int(self.metadata["tags"]["rotate"])
+                if abs(angle) == 90:
+                    nx = self.metadata["height"]
+                    ny = self.metadata["width"]
+                    self.metadata["height"] = ny
+                    self.metadata["width"] = nx
+            except:
+                # if metadata["tags"]["rotate"] doesn't exist, than we don't need to do anything
+                pass
 
         return self.metadata
+
+            # this code works but explicit tests for presence isn't as pythonic as the try/except block
+            # if "tags" in self.metadata:
+            #     tags = self.metadata["tags"]
+            #     if "rotate" in tags:
+            #         angle = int(tags["rotate"])
+            #         if abs(angle) == 90:
+            #             nx = self.metadata["height"]
+            #             ny = self.metadata["width"]
+            #             self.metadata["height"] = ny
+            #             self.metadata["width"] = nx
+
 
     def read_metadata(self):
 
@@ -66,7 +93,10 @@ class Video_Reader(object):
                              stdout=sp.PIPE, stderr=sp.PIPE, stdin=sp.PIPE)
 
         ffprobe_output = meta_pipe.stdout.read(BUFFER_SIZE)
-        meta_pipe.close()
+        meta_pipe.stdout.close()
+        meta_pipe.stderr.close()
+        meta_pipe.send_signal(signal.SIGINT)
+        meta_pipe.wait()
 
         full_metadata = json.loads(ffprobe_output)
 
